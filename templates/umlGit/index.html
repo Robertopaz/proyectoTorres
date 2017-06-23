@@ -1,0 +1,33 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    {% load staticfiles %}
+    <meta charset="UTF-8">
+    <title>Repositorios</title>
+</head>
+<body>
+<h1>{{ userData }}</h1>
+
+
+{% for i in repos %}
+            <a href="diagram/{{ i }}">{{ i }}</a>
+{% endfor %}
+
+</body>
+<script
+  src="https://code.jquery.com/jquery-3.2.1.min.js"
+  integrity="sha256-hwg4gsxgFZhOsEEamdOYGBf13FyQuiTwlAQgxVSNgt4="
+  crossorigin="anonymous"></script>
+<script>
+    function obtener_repo(i){
+        alert(i);
+        $.ajax({
+            url:'diagram',
+            type:'GET',
+            data:{nombre:i},
+        }).done(function (data) {
+            console.log(data)
+        })
+    }
+</script>
+</html>

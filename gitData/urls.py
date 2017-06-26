@@ -3,5 +3,5 @@ from django.contrib import admin
 from . import views
 urlpatterns = [
     url(r'^$', views.index, name='index'),
-    url(r'^diagram/(?P<nombre>\w+)/(?P<rep>\w+)$', views.diagrama, name='diagrama'),
+    url(r'^diagram/(?P<nombre>\w+)$', views.diagrama, name='diagrama'),
 ]

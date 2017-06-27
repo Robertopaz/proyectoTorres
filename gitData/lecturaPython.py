@@ -9,46 +9,6 @@ def setCodigo(pCodigo):
     global codigo
     codigo = pCodigo
 
-setCodigo("""class Telefono:
-    "Clase teléfono"
-    def __init__(self):
-        pass
-    def telefonear(self):
-        print('llamando')
-    def colgar(self):
-        print('colgando')        
-
-class Camara:
-    "Clase camara fotográfica"
-    def __init__(self):
-        pass
-    def fotografiar(self):
-        print('fotografiando')        
-
-class Reproductor:
-    "Clase Reproductor Mp3"
-    def __init__(self):
-        pass
-    def reproducirmp3(self):
-        print('reproduciendo mp3')                  
-    def reproducirvideo(self):
-        print('reproduciendo video')                  
-
-class Movil(Telefono, Camara, Reproductor):
-    def __del__(self):
-        print('Móvil apagado')
-    def kamara(self):
-        print "penultimo"
-    def iokese(self):
-        print "último"
-
-movil1 = Movil()
-print(dir(movil1))
-movil1.reproducirmp3()
-movil1.telefonear()
-movil1.fotografiar()
-del movil1""")
-
 def buscarNombresClases(pCodigo):
     listaClases = []
     listaPosClases = []
@@ -69,8 +29,6 @@ def buscarNombresClases(pCodigo):
         #Sumandole 6 posiciones que son las que ocupa "class " para si solo guardar el nombre
         listaClases.append(codigo[listaPosClases[n]+6:cadenaTMP.find(":")+listaPosClases[n]])
     return listaClases
-
-#listaClases = buscarNombresClases(codigo)
 
 def buscarMetodos(pClase):
     listaMetodos = []
@@ -223,19 +181,5 @@ def obtenerJson():
     return json.dumps(listaDiccionarios)
 
     
-print obtenerJson()
+#print obtenerJson()
 
-"""listaClases = buscarNombresClases(codigo)
-listaMetodosHumano = buscarMetodos("Humano")
-listaMetodosAlpaca = buscarMetodos("Olakease")
-listaMetodosNobody = buscarMetodos("NoBodyToldMeSheWas12")
-listaAtributosAlpaca = buscarAtributos("Olakease")
-listaAtributosHumano = buscarAtributos("Humano")"""
-#listaCodigos1 = buscarCodigos("Movil(Telefono, Camara, Reproductor)")
-#print listaCodigos1
-"""print listaClases
-print listaMetodosHumano
-print listaMetodosAlpaca
-print listaMetodosNobody
-print listaAtributosAlpaca
-print listaAtributosHumano"""

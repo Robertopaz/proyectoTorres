@@ -65,7 +65,6 @@ def buscarAtributos(pClase):
     codigoAPartirDeClase1 = codigo[codigo.index(pClase+":"):len(codigo)]
     #Eliminamos lo posterior a la clase de la cual vamos a obtener los métodos
     codigoAPartirDeClase2 = codigoAPartirDeClase1[0: codigoAPartirDeClase1.find("class")]
-    print codigoAPartirDeClase2
     if("__init__" in codigoAPartirDeClase2):
         #Eliminamos el contenido anterior al método "__init__" y también lo que hay fuera de el mismo
         #Para asegurarnos que solo se obtengan los atributos de la clase en su constructor

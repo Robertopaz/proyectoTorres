@@ -70,7 +70,6 @@ def buscarAtributos(pClase):
         #Para asegurarnos que solo se obtengan los atributos de la clase en su constructor
         noaux = codigoAPartirDeClase2[codigoAPartirDeClase2.find("__init__")+8:len(codigo)]
         noaux2 = noaux[noaux.find(":")+1: noaux.find("def")]
-        print noaux2
         try:
             while True:
                 # cada vez buscamos desde un caracter más adelante de la

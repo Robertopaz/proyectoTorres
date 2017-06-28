@@ -65,21 +65,30 @@ def buscarAtributos(pClase):
     codigoAPartirDeClase1 = codigo[codigo.index(pClase+":"):len(codigo)]
     #Eliminamos lo posterior a la clase de la cual vamos a obtener los métodos
     codigoAPartirDeClase2 = codigoAPartirDeClase1[0: codigoAPartirDeClase1.find("class")]
-    try:
-        while True:
-            # cada vez buscamos desde un caracter más adelante de la
-            # la última ocurrencia encontrada a partir de la clase que recibimos como parametro
-            #Se recorre la posición hacia la siguiente de lo último encontrado
-            pos_inicial = codigoAPartirDeClase2.index("self.", pos_inicial+1)
-            listaPosAtributos.append(pos_inicial)
-    except ValueError: # cuando ya no se encuentre def
-        pos_inicial = -1
-    for n in range(0, len(listaPosAtributos)):
-        #Se obtiene una copia de la cadena en la posicion encontrada de n, hasta 50 caracteres más
-        #asumiento que el nombre del atributo no será más largo que eso
-        cadenaTMP = codigoAPartirDeClase2[listaPosAtributos[n] : listaPosAtributos[n]+50]
-        #Se obtiene nombre del atributo desechando de la cadena temporal todo aquello que no sea eso
-        listaAtributos.append(codigoAPartirDeClase2[listaPosAtributos[n]+5:(cadenaTMP.find("=")) + listaPosAtributos[n]-1])
+    print codigoAPartirDeClase2
+    if("__init__" in codigoAPartirDeClase2):
+        #Eliminamos el contenido anterior al método "__init__" y también lo que hay fuera de el mismo
+        #Para asegurarnos que solo se obtengan los atributos de la clase en su constructor
+        noaux = codigoAPartirDeClase2[codigoAPartirDeClase2.find("__init__")+8:len(codigo)]
+        noaux2 = noaux[noaux.find(":")+1: noaux.find("def")]
+        print noaux2
+        try:
+            while True:
+                # cada vez buscamos desde un caracter más adelante de la
+                # la última ocurrencia encontrada a partir de la clase que recibimos como parametro
+                #Se recorre la posición hacia la siguiente de lo último encontrado
+                pos_inicial = noaux2.index("self.", pos_inicial+1)
+                listaPosAtributos.append(pos_inicial)
+        except ValueError: # cuando ya no se encuentre def
+            pos_inicial = -1
+        for n in range(0, len(listaPosAtributos)):
+            #Se obtiene una copia de la cadena en la posicion encontrada de n, hasta 50 caracteres más
+            #asumiento que el nombre del atributo no será más largo que eso
+            cadenaTMP = noaux2[listaPosAtributos[n] : listaPosAtributos[n]+50]
+            #Se obtiene nombre del atributo desechando de la cadena temporal todo aquello que no sea eso
+            listaAtributos.append(noaux2[listaPosAtributos[n]+5:(cadenaTMP.find("=")) + listaPosAtributos[n]-1])
+    else:
+        listaAtributos = []
     return listaAtributos
 
 def buscarCodigos(pClase):

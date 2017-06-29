@@ -161,6 +161,30 @@ def buscarRelaciones(pClase):
             clasesRelacionadas.append(listaClases[n])
     return clasesRelacionadas
 
+def buscarObjetosInstanciados(pClase):
+    listaPosInstancias = []
+    listaObjetos = []
+    pos_inicial = -1
+    try:
+        while True:
+            # cada vez buscamos desde un caracter más adelante de la
+            # la última ocurrencia encontrada a partir de la clase que recibimos como parametro
+            #Se recorre la posición hacia la siguiente de lo último encontrado
+            pos_inicial = codigo.index(" = "+pClase+"(", pos_inicial+1)
+            listaPosInstancias.append(pos_inicial)
+    except ValueError: # cuando ya no se encuentre self
+        pos_inicial = -1
+    for n in range (0, len(listaPosInstancias)):
+        #print listaPosInstancias[n]
+        aux = codigo[listaPosInstancias[n]-50:listaPosInstancias[n]]
+        aux2 = aux[::-1]
+        aux3 = aux2[0:aux2.find("\n")]
+        aux4 = aux3[::-1]
+        listaObjetos.append(aux4.strip())
+        if(len(listaObjetos)==0):
+            listaObjetos.append("Vacío")
+    return listaObjetos
+
 def obtenerJson():
     #Se obtienen las clases del codigo
     listaClases = buscarNombresClases(codigo)

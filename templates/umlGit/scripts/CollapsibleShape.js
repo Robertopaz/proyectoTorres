@@ -1,7 +1,7 @@
 var CollapsibleShape = draw2d.shape.layout.VerticalLayout.extend({
 
-	NAME: "ClaseSimple",
-	
+    NAME: "ClaseSimple",
+    
     init : function(attr)
     {
         this.inputLocator  = new CollapsibleInputLocator();
@@ -121,25 +121,38 @@ var CollapsibleShape = draw2d.shape.layout.VerticalLayout.extend({
         }));
 
         var obtenerMet= [];
+        var metodos = [];
 
+        var contadorMetodos= 0;
         for(var cMetodos=0; cMetodos<jsonMsg[iJSON].metodos.length; cMetodos++){
-            var mName = jsonMsg[iJSON].metodos[cMetodos];
-            console.log( nombreClase[iJSON]+"====metd===="+mName);
+            metodosClase[iJSON] = jsonMsg[iJSON].metodos[cMetodos];
+            
+            var nombreMetodo = metodosClase[iJSON];
+
             this.lblMetodo= null;
             this.lblMetodo = new draw2d.shape.basic.Label({
                 stroke: 2,
                 padding: {left: 20, right: 20}
             });
-            this.lblMetodo.setText(mName);
+            this.lblMetodo.setText(nombreMetodo);
             this.lblMetodo.setColor("#64AEE6");
             this.lblMetodo.setFontColor("#DEDFE0");
             this.lblMetodo.setFontSize(14);
-            obtenerMet = this.lblMetodo.getText();
+            this.lblMetodo.setId(contadorMetodos);
             this.lblMetodo.onClick= function(){
-               alert(obtenerMet);
+                alert("Metodo");
             };
-            this.row2.add(this.lblMetodo);
+            metodos.push(this.lblMetodo);
+            contadorMetodos++;
         }
+        for(var cMetodos=0; cMetodos<jsonMsg[iJSON].metodos.length; cMetodos++){
+
+        }
+
+        for (i = 0; i < metodos.length; i++){
+            this.row2.add(metodos[i]);
+        }
+
         
         var inputNode = this.createPort("input",  this.inputLocator);
         var outputNode = this.createPort("output", this.outputLocator);

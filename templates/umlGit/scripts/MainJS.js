@@ -1,5 +1,4 @@
-var jsonMsg = [{"nombre":"Telefono","metodos":["_init(self)","telefonear(self)","colgar(self)"],"contenidos":["\n        pass\n    ","\n        print('llamando')\n    ","\n        print('colgando')        \n"],"atributos":["attr"],"relaciones":[]},{"nombre":"Camara","metodos":["init(self)","fotografiar(self)"],"contenidos":["\n        pass\n    ","\n        print('fotografiando')        \n"],"atributos":[],"relaciones":[]},{"nombre":"Reproductor","metodos":["init(self)","reproducirmp3(self)","reproducirvideo(self)"],"contenidos":["\n        pass\n    ","\n        print('reproduciendo mp3')                  \n    ","\n        print('reproduciendo video')                  \n"],"atributos":[],"relaciones":[]},{"nombre":"Movil(Telefono, Camara, Reproductor)","metodos":["del_(self)","kamara(self)","iokese(self)"],"contenidos":["\n        print('Móvil apagado')\n    ","\n        print \"penultimo\"\n    ","\n        print \"último"],"atributos":[],"relaciones":[]}];
-    
+var ruta = 'http://192.168.1.112:666/diagram/getnotification/238285/1/123/file1';
 var nombreClase = new Array(); //array para guardar los nombres de las clases
 var metodosClase = new Array(); //array para guardar los metodos de cada una de las clases
 var atributosClase = new Array(); //array para guardar atributos de cada clase
@@ -9,8 +8,22 @@ var iJSON = 0;
 var attrlbl = null;
 var methodName = null;
 
+var jsonMsg = [];
+    ajaxJSON = new XMLHttpRequest();
+    ajaxJSON.open('GET', ruta, true);
+    ajaxJSON.send();
+    ajaxJSON.onreadystatechange=function(){
+        if(ajaxJSON.readyState==4){
+            jsonMsg= JSON.parse(ajaxJSON.responseText);
+            dibujar(jsonMsg);
+            //console.log(jsonMsg);
+        }
+    };
 
-$(window).load(function () {
+
+function dibujar( arreglo) {
+    jsonMsg = arreglo;
+    
 
     //establecer el canvas
     var canvas = new draw2d.Canvas("gfx_holder");
@@ -26,6 +39,7 @@ $(window).load(function () {
         return connection;
     }
     }));
+    
     canvas.installEditPolicy(new draw2d.policy.canvas.FadeoutDecorationPolicy());
     
     canvas.installEditPolicy(  new draw2d.policy.connection.DragConnectionCreatePolicy({
@@ -48,15 +62,17 @@ $(window).load(function () {
     var clases = []
     
     //recorrer el json y crear las clases en el canvas
-    for(iJSON = 0; iJSON < jsonMsg.length; iJSON++) {
-        nombreClase[iJSON] = jsonMsg[iJSON].nombre;
-        atributosClase[iJSON] = jsonMsg[iJSON].atributos;
-        //metodosClase[iJSON] = jsonMsg[iJSON].metodos;
-        relacionesClases[iJSON] = jsonMsg[iJSON].relaciones;
+    jsonMsg.forEach(function(element) {
+        nombreClase[iJSON] = element.nombre;
+        element.atributos.push(" ");
+        //atributosClase[iJSON] = jsonMsg[iJSON].atributos;
+        relacionesClases[iJSON] = element.relaciones;
         var clase = new CollapsibleShape({x: 150 + (iJSON*100), y:150+(iJSON*100)});
         clase.NAME = nombreClase[iJSON];
         clases.push(clase);
-    }
+        iJSON++;
+    });
+
 
     for(i = 0; i < clases.length; i++)
     {
@@ -67,9 +83,9 @@ $(window).load(function () {
         for(j = 0; j < relacionesClases.length; j++){
             for(k = 0; k < clases.length; k++){
                 if(relacionesClases[i][j] == clases[k].NAME){
-                    console.log("Clase: " + clases[i].NAME + " rel: " + relacionesClases[i][j]);
+                    //console.log("Clase: " + clases[i].NAME + " rel: " + relacionesClases[i][j]);
                     var c = new MyConnection({
-                        targetDecorator: new draw2d.decoration.connection.DiamondDecorator(),
+                        targetDecorator: new draw2d.decoration.connection.ArrowDecorator(),
                         source:clases[i].getOutputPort(0),
                         target:clases[k].getInputPort(0)
                     });
@@ -98,7 +114,7 @@ $(window).load(function () {
         }
     }); 
 
-});
+}
 
 function updatePreview(canvas){
     var xCoords = [];

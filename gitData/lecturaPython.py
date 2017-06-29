@@ -114,7 +114,7 @@ def buscarCodigos(pClase):
         cadenaTMP = codigoAPartirDeClase2[listaPosMetodos[n]+4 : len(codigoAPartirDeClase2)]
         #Se obteiene el codigo de la función desechando de la cadena temporal todo aquello que no sea eso
         #recorriendo desde el inicio de la función hasta encontral el siguiente "def"
-        listaMetodos.append(cadenaTMP[cadenaTMP.find(":")+1:cadenaTMP.find("def")])
+        listaMetodos.append(cadenaTMP[cadenaTMP.find(":")+1:cadenaTMP.find("def")].strip())
     return listaMetodos
 
 def buscarCodigoMetodoUltimaClase(pClase):
@@ -142,7 +142,7 @@ def buscarCodigoMetodoUltimaClase(pClase):
         cadenaTMP = codigoAPartirDeClase2[listaPosMetodos[n]+4 : len(codigoAPartirDeClase2)]
         #Se obteiene el codigo de la función desechando de la cadena temporal todo aquello que no sea eso
         #recorriendo desde el inicio de la función hasta encontral el siguiente "def"
-        listaMetodos.append(cadenaTMP[cadenaTMP.find(":")+1:cadenaTMP.find("def")])
+        listaMetodos.append(cadenaTMP[cadenaTMP.find(":")+1:cadenaTMP.find("def")].strip())
     return listaMetodos
 
 def buscarRelaciones(pClase):

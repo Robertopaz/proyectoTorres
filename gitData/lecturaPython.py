@@ -319,7 +319,7 @@ def obtenerJsonSecuencia(pMetodo):
     #Se asigna el contenido de la lista de llamadas en el método al atributo llamadas en el diccionarioRegresar
     diccionarioRegresar["llamadas"] = llamadas
     diccionarioRegresar["contenidos"] = contenidos[contenidos.find("):")+2:len(contenidos)]
-    return diccionarioRegresar
+    return json.dumps(diccionarioRegresar)
 
     
 #print obtenerJson()

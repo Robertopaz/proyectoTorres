@@ -9,16 +9,19 @@ var attrlbl = null;
 var methodName = null;
 
 var jsonMsg = [];
-    ajaxJSON = new XMLHttpRequest();
-    ajaxJSON.open('GET', ruta, true);
-    ajaxJSON.send();
-    ajaxJSON.onreadystatechange=function(){
-        if(ajaxJSON.readyState==4){
-            jsonMsg= JSON.parse(ajaxJSON.responseText);
-            dibujar(jsonMsg);
-            //console.log(jsonMsg);
-        }
-    };
+ajaxJSON = new XMLHttpRequest();
+ajaxJSON.open('GET', ruta, true);
+ajaxJSON.send();
+ajaxJSON.onreadystatechange=function(){
+    if(ajaxJSON.readyState==4){
+        var response = ajaxJSON.responseText; 
+        var subString = "["+response.slice(2,response.length);
+        jsonMsg= JSON.parse(subString);
+        console.log(jsonMsg);
+        dibujar(jsonMsg);
+        
+    }
+};
 
 
 function dibujar( arreglo) {

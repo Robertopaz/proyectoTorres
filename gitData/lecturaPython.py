@@ -318,6 +318,7 @@ def obtenerJsonSecuencia(pMetodo):
     llamadas = listaDiccionarios[0:len(listaDiccionarios)-1].split(",")
     #Se asigna el contenido de la lista de llamadas en el método al atributo llamadas en el diccionarioRegresar
     diccionarioRegresar["llamadas"] = llamadas
+    diccionarioRegresar["contenidos"] = contenidos[contenidos.find("):")+2:len(contenidos)]
     return diccionarioRegresar
 
     

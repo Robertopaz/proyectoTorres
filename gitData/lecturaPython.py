@@ -209,7 +209,7 @@ def obtenerJson():
         #Se guarda el diccionario actual en la lista para no perderlo
         listaDiccionarios[n] = plantillaDiccionario
     #Se returna el json de la lista
-    return json.dumps(listaDiccionarios)
+    return listaDiccionarios
 
     
 #print obtenerJson()

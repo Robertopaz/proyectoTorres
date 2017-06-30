@@ -211,6 +211,115 @@ def obtenerJson():
     #Se returna el json de la lista
     return listaDiccionarios
 
+#Obtiene las llamadas de la pInstancias, en el pMetodo, comparando con pContenido
+def obtenerLlamadas(pInstancia, pMetodo, pContenido):
+    listaLlamadas = ""
+    listaPosLlamada = []
+    pos_inicial = -1
+    try:
+        while True:
+            # cada vez buscamos desde un caracter más adelante de la
+            # la última ocurrencia encontrada a partir de la clase que recibimos como parametro
+            #Se recorre la posición hacia la siguiente de lo último encontrado
+            pos_inicial = pContenido.index(pInstancia+"."+pMetodo[0:pMetodo.find("(")], pos_inicial+1)
+            listaPosLlamada.append(pos_inicial)
+    except ValueError: # cuando ya no se encuentre self
+        pos_inicial = -1
+    for n in range(0, len(listaPosLlamada)):
+        #Se obtiene una copia de la cadena en la posicion encontrada de n, hasta 50 caracteres más
+        #asumiento que el nombre de la función no será más largo que eso
+        cadenaTMP = pContenido[listaPosLlamada[n] : listaPosLlamada[n]+50]
+        #Se obteiene nombre de la función desechando de la cadena temporal todo aquello que no sea eso
+        #Se le concatena un coma para después poder separarlos en arreglos por un split de comas
+        listaLlamadas += pContenido[listaPosLlamada[n]:(cadenaTMP.find("(")) + listaPosLlamada[n]]+","
+        #Antes de regresarlo se elimina la última coma para evitar crear un elemento vacío en el arreglo que se haga después por split
+    return listaLlamadas[0:len(listaLlamadas)-1]
+
+#Funcion para buscar el contenido de un método individualmente
+#Mientras no se el último método de la última clase funcionará
+def buscarCodigoPorMetodo(pMetodo):
+    contenidoMetodo = ""
+    listaPosMetodos = []
+    pos_inicial = -1
+    cadenaTMP = ""
+    #Eliminamos lo anterior al método de la cual vamos a obtener los métodos
+    codigoAPartirDeMetodo1 = codigo[codigo.find("def "+pMetodo+":"):len(codigo)]
+    #Eliminamos lo posterior al método de la cual vamos a obtener los métodos
+    codigoAPartirDeMetodo2 = codigoAPartirDeMetodo1[0: codigoAPartirDeMetodo1.find("class")]
+    return codigoAPartirDeMetodo2.strip()
+
+#Función especial para poder obtener el contenido de un método individualmente
+#Funcionará solo si se usa para buscar el último método de la última clase
+def buscarCodigoPorMetodoUltimaClase(pMetodo):
+    contenidoMetodo = ""
+    listaPosMetodos = []
+    pos_inicial = -1
+    cadenaTMP = ""
+    #Eliminamos lo anterior a la clase de la cual vamos a obtener los métodos
+    codigoAPartirDeMetodo1 = codigo[codigo.find("def "+pMetodo+":"):len(codigo)]
+    #Eliminamos lo posterior a la clase de la cual vamos a obtener los métodos
+    codigoAPartirDeMetodo2 = codigoAPartirDeMetodo1[codigoAPartirDeMetodo1.find(":")+1: codigoAPartirDeMetodo1.find("\n\n")]
+    return codigoAPartirDeMetodo2.strip()
+
+def obtenerJsonSecuencia(pMetodo):
+    #Se crean una lista donde se almacenarán los objetos instanciados en pMetodo
+    listaObjetosEnElMetodo = []
+    #Se obtienen todas las clases para obtener todos sus métodos
+    listaTodasLasClases = buscarNombresClases(codigo)
+    #Se crea una variable que recibirá todos los métodos de todas las clases
+    listaMetodosABuscar = []
+    #Se crea un diccionario para poder acceder a las listas de las instancias de objetos según atributo
+    listaInstanciasTodasLasClases = {}
+    #Se obtienen todos los métodos de todo el archivo obteniendo las listas de métodos clase por clase
+    for n in range(0, len(listaTodasLasClases)):
+        listaMetodosABuscar+= buscarMetodos(listaTodasLasClases[n])
+        listaInstanciasTodasLasClases["instancias"+listaTodasLasClases[n]] = buscarObjetosInstanciados(listaTodasLasClases[n])
+    #Se declara una variable que contrendrá el código del método
+    contenidos = ""
+    #Se recorren los metodos existentes
+    for n in range(0,len(listaMetodosABuscar)):
+        #Si se encuentra un método que coincida con el metodo recibido en el parametro se entra a la condición
+        if(listaMetodosABuscar[n] == pMetodo):
+            #Si es el último método de la última clase se obtiene el contenido de ese método de forma dierente a los demás métodos
+            if(n == len(listaMetodosABuscar)-1):
+                contenidos = buscarCodigoPorMetodoUltimaClase(listaMetodosABuscar[n])
+            #Sino es él último método del archivo se obtiene el contenido de ese método de forma similar a todos menos el último
+            else:
+                contenidos = buscarCodigoPorMetodo(listaMetodosABuscar[n])
+    #Recorrermos todas las clases para obtener todos los atributos del diccionario que tienen su nombre
+    for n in range(0, len(listaTodasLasClases)):
+        #Recorremos todos los elementos de un atributo "instancias" + el elemento n de la lista de las clases
+        for o in range(0, len(listaInstanciasTodasLasClases["instancias"+listaTodasLasClases[n]])):
+            #Creamos una variable auxiliar y le asignamos el valor de la posición donde se encuentre el elemento del atributo en la posición o
+            aux = contenidos.find(listaInstanciasTodasLasClases["instancias"+listaTodasLasClases[n]][o])
+            #Si el valor de la variable auxiliar es diferente de uno quiere decir que se encontró en el contenido del método
+            #Por lo que lo guardamos en la lista de objetos instanciados en el método
+            if(aux != -1):
+                listaObjetosEnElMetodo.append(listaInstanciasTodasLasClases["instancias"+listaTodasLasClases[n]][o]+":"+listaTodasLasClases[n])
+    #Creamos un diccionario el cual regresaremos como el json de de ésta función
+    diccionarioRegresar = {}
+    #Creamos una variable de string la cual tendrá contenidas las llamadas obtenidas del método obtenerLLamadas            
+    listaDiccionarios = ""
+    #Se recorren los metodos existentes
+    for o in range(0,len(listaObjetosEnElMetodo)):
+        #Se obtiene solo el nombre del objeto instanciado
+        pInstancia = listaObjetosEnElMetodo[o].split(":")
+        #Se recorren todos los métodos de todo el archivo para buscar llamadas que coincidan con las instancias y métodos escritras
+        for n in range(0,len(listaMetodosABuscar)):
+                #Si la llamada del método con la listaObjetosEnElMetodo en la posición o no está vacía se agrega el contenido al string listaDiccionarios
+                #Debido a que la función obtenerLlamadas() busca con todas las combinaciones de llamadas posibles de métodos y objetos
+                #a veces regresa contenidos vacío, por eso que se verifique antes si tiene contenido o no
+                if(obtenerLlamadas(pInstancia[0], listaMetodosABuscar[n], contenidos) != ""):
+                    #Se le concatena una coma al final para poder separarlo luego en una lista con un split
+                    listaDiccionarios += obtenerLlamadas(pInstancia[0], listaMetodosABuscar[n], contenidos)+","
+    #Se asigna el contenido de la lista de objetos en el método al atributo objetos en el diccionarioRegresar
+    diccionarioRegresar["objetos"] = listaObjetosEnElMetodo
+    #Se le quita la última coma a lo que se obtuvo de la función de obtenerLlamadas() y se convierte en arreglo con un split
+    llamadas = listaDiccionarios[0:len(listaDiccionarios)-1].split(",")
+    #Se asigna el contenido de la lista de llamadas en el método al atributo llamadas en el diccionarioRegresar
+    diccionarioRegresar["llamadas"] = llamadas
+    return diccionarioRegresar
+
     
 #print obtenerJson()
 

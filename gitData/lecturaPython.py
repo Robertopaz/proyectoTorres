@@ -7,7 +7,7 @@ codigo = ""
 
 def setCodigo(pCodigo):
     global codigo
-    codigo = pCodigo
+    codigo = pCodigo+" 0"
 
 def buscarNombresClases(pCodigo):
     listaClases = []
@@ -84,7 +84,7 @@ def buscarAtributos(pClase):
             #asumiento que el nombre del atributo no será más largo que eso
             cadenaTMP = noaux2[listaPosAtributos[n] : listaPosAtributos[n]+50]
             #Se obtiene nombre del atributo desechando de la cadena temporal todo aquello que no sea eso
-            listaAtributos.append(noaux2[listaPosAtributos[n]+5:(cadenaTMP.find("=")) + listaPosAtributos[n]-1])
+            listaAtributos.append(noaux2[listaPosAtributos[n]+5:(cadenaTMP.find("=")) + listaPosAtributos[n]])
     else:
         listaAtributos = []
     return listaAtributos
@@ -139,11 +139,12 @@ def buscarCodigoMetodoUltimaClase(pClase):
         #Se obtiene una copia de la cadena en la posicion encontrada de n+4 que es donde está el "def "
         #hasta la longitud del codigo cortado donde se encuentra un class, de tal forma que obtenemos
         #todo el contenido del codigo sin importar su longitud
-        cadenaTMP = codigoAPartirDeClase2[listaPosMetodos[n]+4 : len(codigoAPartirDeClase2)]
+        cadenaTMP = codigoAPartirDeClase2[listaPosMetodos[n]+4: len(codigoAPartirDeClase2)]
         #Se obteiene el codigo de la función desechando de la cadena temporal todo aquello que no sea eso
         #recorriendo desde el inicio de la función hasta encontral el siguiente "def"
         listaMetodos.append(cadenaTMP[cadenaTMP.find(":")+1:cadenaTMP.find("def")].strip())
     return listaMetodos
+
 
 def buscarRelaciones(pClase):
     clasesRelacionadas = []
